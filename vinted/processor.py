@@ -16,6 +16,9 @@ class SalesProcessor:
             return {}
 
         df = pd.DataFrame([vars(o) for o in orders])
+        # Add the property manually since vars() misses it
+        df['days_to_sell'] = [o.days_to_sell for o in orders]
+        
         df['date'] = pd.to_datetime(df['date'], errors='coerce')
         df = df.dropna(subset=['date'])  # drop any unparseable dates
         df = df.sort_values('date')
@@ -91,6 +94,20 @@ class SalesProcessor:
         # --- Status distribution ---
         status_dist = df['status'].value_counts().to_dict()
 
+        # --- Fastest 10 items (lowest days_to_sell) ---
+        fastest_items = []
+        if 'days_to_sell' in df.columns:
+            fastest_df = df[df['days_to_sell'].notnull()].nsmallest(10, 'days_to_sell').copy()
+            fastest_df['date_str'] = fastest_df['date'].dt.strftime('%b %d, %Y')
+            for _, row in fastest_df.iterrows():
+                fastest_items.append({
+                    'title': row['title'],
+                    'price': row['price'],
+                    'date_str': row['date_str'],
+                    'status': row['status'],
+                    'days_to_sell': row['days_to_sell']
+                })
+
         return {
             "total_revenue": round(total_revenue, 2),
             "total_orders": total_orders,
@@ -106,6 +123,7 @@ class SalesProcessor:
             "price_distribution": price_distribution,
             "top_items": top_items,
             "latest_sales": latest_sales,
+            "fastest_items": fastest_items,
             "status_distribution": status_dist,
             "currency": orders[0].currency if orders else "EUR"
         }

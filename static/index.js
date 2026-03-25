@@ -192,7 +192,28 @@ function renderDashboard(data) {
             <td style="font-weight:600;color:#34d399">€${(+item.price).toFixed(2)}</td>
           </tr>`);
     });
+
+    renderFastestItems(data.fastest_items || []);
 }
+
+const renderFastestItems = (items) => {
+    const tbody = document.getElementById('fastest_items_body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#475569;padding:20px">No high-velocity data detected yet</td></tr>';
+        return;
+    }
+    items.forEach(item => {
+        tbody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td class="item-name">${String(item.title).substring(0,40)}${item.title.length>40?'…':''}</td>
+            <td style="color:#94a3b8">${item.date_str}</td>
+            <td style="color:#34d399;font-weight:600">${item.days_to_sell} days</td>
+            <td style="font-weight:600">€${(+item.price).toFixed(2)}</td>
+          </tr>`);
+    });
+};
 
 window.filterTransactions = (status) => {
     if (!lastDashboardData || !lastDashboardData.latest_sales) return;

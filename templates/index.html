@@ -38,6 +38,17 @@
             <button class="btn" onclick="syncLiveData()">Synchronize Now</button>
             <button class="btn btn-cancel" onclick="closeSyncModal()">Cancel</button>
             <div id="syncStatus"></div>
+        <!-- Row 5: Velocity Leaderboard -->
+        <div class="chart-row">
+            <section class="card table-card" style="border: 1px solid rgba(52,211,153,0.3)">
+                <div class="card-header" style="color:#34d399">⚡ Fastest 10 Items (Best Turnover)</div>
+                <div class="table-container">
+                    <table class="modern-table">
+                        <thead><tr><th>Item</th><th>Sold Date</th><th>Days to Sell</th><th>Price</th></tr></thead>
+                        <tbody id="fastest_items_body"></tbody>
+                    </table>
+                </div>
+            </section>
         </div>
     </div>
 
