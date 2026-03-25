@@ -166,22 +166,23 @@ async def compute_inventory_stats(items: list, user: dict, client: VintedClient)
     df = pd.DataFrame(items)
     if not df.empty:
         first_id = items[0].get('id')
-        logger.info(f"[DIAGNOSTIC] Fetching full details for item {first_id}...")
+        print(f"[DIAGNOSTIC] Fetching full details for item {first_id}...")
         try:
             url = f"{client.base_url}/items/{first_id}"
             async with httpx.AsyncClient(headers=client.headers) as http:
                 resp = await http.get(url)
                 if resp.status_code == 200:
-                    logger.info(f"[DIAGNOSTIC] Full item detail: {resp.json().get('item', {})}")
+                    detail = resp.json().get('item', {})
+                    print(f"[DIAGNOSTIC] Full item detail keys: {list(detail.keys())}")
+                    print(f"[DIAGNOSTIC] Catalog info: {detail.get('catalog_id')} | {detail.get('catalog_branch_title')}")
                 else:
-                    logger.info(f"[DIAGNOSTIC] Full item fetch failed: {resp.status_code}")
+                    print(f"[DIAGNOSTIC] Full item fetch failed: {resp.status_code}")
         except Exception as e:
-            logger.info(f"[DIAGNOSTIC] Full item fetch error: {e}")
+            print(f"[DIAGNOSTIC] Full item fetch error: {e}")
             
-        logger.info(f"[DIAGNOSTIC] First item detail: {items[0]}")
+        print(f"[DIAGNOSTIC] RAW FIRST ITEM: {items[0]}")
         sample = df.iloc[0].to_dict()
-        logger.info(f"[DIAGNOSTIC] Path: {sample.get('path')}")
-        logger.info(f"[DIAGNOSTIC] Stock Status Check: is_closed={sample.get('is_closed')}, is_hidden={sample.get('is_hidden')}, is_reserved={sample.get('is_reserved')}")
+        print(f"[DIAGNOSTIC] Path: {sample.get('path')}")
 
     def parse_price(p):
         if isinstance(p, dict): return float(p.get('amount', 0))
