@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinted Analytics • Premium Dashboard</title>
+    <link rel="stylesheet" href="/static/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="space-bg"></div>
+<div class="glass-container">
+    <header>
+        <div class="header-left">
+            <div class="logo">VINTED INTELLIGENCE</div>
+            <div class="subtitle">Advanced Sales Analytics Platform</div>
+        </div>
+        <button class="sync-btn" onclick="openSyncModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            Connect Live Account
+        </button>
+    </header>
+
+    <!-- Live Sync Modal -->
+    <div id="syncModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Live Vinted Sync</h2>
+            <p style="color:#94a3b8;margin-top:-15px;margin-bottom:25px;font-size:14px">Securely fetch your actual sales data</p>
+            <div class="form-group">
+                <label>Vinted Domain</label>
+                <input type="text" id="vintedDomain" placeholder="e.g. vinted.at, vinted.de">
+            </div>
+            <div class="form-group">
+                <label>Session Cookie</label>
+                <input type="password" id="vintedCookie" placeholder="Paste full cookie from DevTools Network tab">
+            </div>
+            <button class="btn" onclick="syncLiveData()">Synchronize Now</button>
+            <button class="btn btn-cancel" onclick="closeSyncModal()">Cancel</button>
+            <div id="syncStatus"></div>
+        </div>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="showTab('sales')" id="tab-sales">📊 Sales Analytics</button>
+        <button class="tab-btn" onclick="showTab('inventory')" id="tab-inventory">📦 Inventory</button>
+    </div>
+
+    <!-- Inventory Section -->
+    <section id="inventory-section" style="display:none">
+        <div style="text-align:center;padding:40px 0 20px">
+            <button class="sync-btn" onclick="syncInventory()" style="margin:auto">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4m16 0-2-4H6L4 7m16 0v12a1 1 0 01-1 1H5a1 1 0 01-1-1V7"/></svg>
+                Load My Current Listings
+            </button>
+            <p id="inv-status" style="color:#94a3b8;font-size:13px;margin-top:12px"></p>
+        </div>
+        <div class="stat-row" id="inv-kpis" style="display:none">
+            <div class="card stat-card"><div class="stat-icon" style="color:#38bdf8;background:rgba(56,189,248,.1)">📦</div><div class="stat-text"><span class="label">Active Listings</span><span class="value" id="inv-total">0</span></div></div>
+            <div class="card stat-card"><div class="stat-icon" style="color:#34d399;background:rgba(52,211,153,.1)">💰</div><div class="stat-text"><span class="label">Potential Revenue</span><span class="value gradient-text" id="inv-potential">€0</span></div></div>
+            <div class="card stat-card"><div class="stat-icon" style="color:#fb923c;background:rgba(251,146,60,.1)">⏱️</div><div class="stat-text"><span class="label">Avg Days Listed</span><span class="value" id="inv-days">—</span></div></div>
+            <div class="card stat-card velocity"><div class="stat-icon" style="color:#fb923c;background:rgba(251,146,60,.1)">⚡</div><div class="stat-text"><span class="label">Sales Velocity</span><span class="value" id="inv-velocity">—</span></div></div>
+            <div class="card stat-card er"><div class="stat-icon" style="color:#f472b6;background:rgba(244,114,182,.1)">📈</div><div class="stat-text"><span class="label">Engagement Rate</span><span class="value" id="inv-er">0%</span></div></div>
+        </div>
+        <div class="chart-row two-col" id="inv-charts" style="display:none;margin-top:22px">
+            <section class="card chart-card">
+                <div class="card-header">Listing Price Distribution</div>
+                <div class="chart-container"><canvas id="invPriceChart"></canvas></div>
+            </section>
+            <section class="card chart-card">
+                <div class="card-header" id="invCatHeader">Brand Mix / Categories</div>
+                <div class="chart-container"><canvas id="invCatChart"></canvas></div>
+            </section>
+        </div>
+        <div id="inv-table-wrap" style="margin-top:22px;display:none">
+            <section class="card table-card">
+                <div class="card-header">Top 10 Most Valuable Listings</div>
+                <div class="table-container">
+                    <table class="modern-table">
+                        <thead><tr><th>Item</th><th>Price</th></tr></thead>
+                        <tbody id="inv-top-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <!-- Engagement Tables -->
+        <div class="chart-row two-col" id="inv-engagement" style="display:none;margin-top:22px">
+            <section class="card table-card">
+                <div class="card-header">❤️ Most Liked Listings</div>
+                <div class="table-container">
+                    <table class="modern-table">
+                        <thead><tr><th>Item</th><th>Price</th><th>Likes</th><th>Views</th></tr></thead>
+                        <tbody id="inv-liked-body"></tbody>
+                    </table>
+                </div>
+            </section>
+            <section class="card table-card">
+                <div class="card-header">👁️ Most Viewed Listings</div>
+                <div class="table-container">
+                    <table class="modern-table">
+                        <thead><tr><th>Item</th><th>Price</th><th>Likes</th><th>Views</th></tr></thead>
+                        <tbody id="inv-viewed-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Category Performance Table -->
+        <div style="margin-top:22px" id="inv-cat-perf-wrap">
+            <section class="card table-card">
+                <div class="card-header">📊 Category Market Performance (Data Science Deep Dive)</div>
+                <div class="table-container">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th onclick="sortCat('catalog_title')" style="cursor:pointer">Category ↕️</th>
+                                <th onclick="sortCat('count')" style="cursor:pointer">Items ↕️</th>
+                                <th onclick="sortCat('price_val')" style="cursor:pointer">Avg Price ↕️</th>
+                                <th onclick="sortCat('view_count')" style="cursor:pointer">Total Views ↕️</th>
+                                <th onclick="sortCat('favourite_count')" style="cursor:pointer">Total Likes ↕️</th>
+                                <th onclick="sortCat('er')" style="cursor:pointer">Eng. Rate ↕️</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inv-cat-perf-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <main id="sales-section">
+        <!-- Row 1: KPI cards -->
+        <div class="stat-row">
+            <div class="card stat-card pulse-hover">
+                <div class="stat-icon revenue">€</div>
+                <div class="stat-text">
+                    <span class="label">Completed Revenue</span>
+                    <span class="value gradient-text" id="total_revenue">€0.00</span>
+                </div>
+            </div>
+            <div class="card stat-card pulse-hover">
+                <div class="stat-icon orders">#</div>
+                <div class="stat-text">
+                    <span class="label">Total Orders</span>
+                    <span class="value" id="total_orders">0</span>
+                </div>
+            </div>
+            <div class="card stat-card pulse-hover">
+                <div class="stat-icon pending">⏳</div>
+                <div class="stat-text">
+                    <span class="label">Pending Revenue</span>
+                    <span class="value" id="pending_revenue">€0.00</span>
+                </div>
+            </div>
+            <div class="card stat-card pulse-hover">
+                <div class="stat-icon aov">📈</div>
+                <div class="stat-text">
+                    <span class="label">Avg Order Value</span>
+                    <span class="value" id="aov">€0.00</span>
+                </div>
+            </div>
+            <div class="card stat-card pulse-hover">
+                <div class="stat-icon" style="color:#f472b6;background:rgba(244,114,182,.1)">🏆</div>
+                <div class="stat-text">
+                    <span class="label">Best Month</span>
+                    <span class="value" id="best_month" style="font-size:22px">—</span>
+                </div>
+            </div>
+            <div class="card stat-card pulse-hover">
+                <div class="stat-icon" style="color:#fb923c;background:rgba(251,146,60,.1)">📉</div>
+                <div class="stat-text">
+                    <span class="label">Worst Month</span>
+                    <span class="value" id="worst_month" style="font-size:22px">—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Main trend + cumulative -->
+        <div class="chart-row two-col">
+            <section class="card chart-card">
+                <div class="card-header">Monthly Revenue</div>
+                <div class="chart-container"><canvas id="salesChart"></canvas></div>
+            </section>
+            <section class="card chart-card">
+                <div class="card-header">Cumulative Revenue</div>
+                <div class="chart-container"><canvas id="cumulativeChart"></canvas></div>
+            </section>
+        </div>
+
+        <!-- Row 3: Day + Hour + Price distribution -->
+        <div class="chart-row three-col">
+            <section class="card chart-card">
+                <div class="card-header">Activity by Day</div>
+                <div class="chart-container"><canvas id="dayChart"></canvas></div>
+            </section>
+            <section class="card chart-card">
+                <div class="card-header">Sales by Hour</div>
+                <div class="chart-container"><canvas id="hourChart"></canvas></div>
+            </section>
+            <section class="card chart-card">
+                <div class="card-header">Price Distribution</div>
+                <div class="chart-container"><canvas id="priceChart"></canvas></div>
+            </section>
+        </div>
+
+        <!-- Row 4: Recent + Top Items -->
+        <div class="chart-row two-col">
+            <section class="card table-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:center">
+                    <span>Recent Transactions</span>
+                    <select id="statusFilter" onchange="filterTransactions(this.value)" class="glass-select" style="font-size:12px;padding:4px 8px;background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);border-radius:6px;cursor:pointer">
+                        <option value="all">All Statuses</option>
+                    </select>
+                </div>
+                <div class="table-container">
+                    <table class="modern-table">
+                        <thead><tr><th>Item</th><th>Date</th><th>Status</th><th>Value</th></tr></thead>
+                        <tbody id="recent_sales_body"></tbody>
+                    </table>
+                </div>
+            </section>
+            <section class="card table-card">
+                <div class="card-header">Top 10 Most Valuable Items</div>
+                <div class="table-container">
+                    <table class="modern-table">
+                        <thead><tr><th>Item</th><th>Sold</th><th>Value</th></tr></thead>
+                        <tbody id="top_items_body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer><div class="glass-tag" id="syncTag">Data Status: Offline</div></footer>
+</div>
+<script src="/static/index.js"></script>
+</body>
+</html>

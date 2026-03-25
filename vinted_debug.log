@@ -1,0 +1,50 @@
+2026-03-25 11:11:55,577 - INFO - Syncing inventory for domain: www.vinted.at
+2026-03-25 11:11:56,507 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/wardrobe/240055157/items?page=1&per_page=100 "HTTP/1.1 200 OK"
+2026-03-25 11:11:57,141 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/wardrobe/240055157/items?page=2&per_page=100 "HTTP/1.1 200 OK"
+2026-03-25 11:11:57,163 - INFO - Fetched 52 items
+2026-03-25 11:11:57,166 - INFO - [DIAGNOSTIC] Item keys: ['id', 'title', 'user_id', 'is_draft', 'is_closed', 'is_reserved', 'is_hidden', 'price', 'transaction_permitted', 'is_processing', 'currency', 'item_closing_action', 'path', 'user', 'item_alert', 'item_alert_type', 'promoted', 'is_business_user', 'size', 'view_count', 'can_push_up', 'push_up', 'can_edit', 'stats_visible', 'favourite_count', 'is_favourite', 'url', 'service_fee', 'total_item_price', 'status', 'photos', 'brand', 'is_heavy_bulky', 'item_box']
+2026-03-25 11:11:57,167 - INFO - [DIAGNOSTIC] Sample item status fields: is_closed=False, status=Neu
+2026-03-25 11:11:57,201 - INFO - Final stats keys: ['total_items', 'total_potential_revenue', 'avg_listing_price', 'price_distribution', 'categories', 'brands', 'top_listings', 'all_listings', 'most_liked', 'most_viewed', 'top_engagement', 'avg_days_listed', 'total_favourites', 'total_views', 'avg_engagement_rate', 'category_performance', 'user_login', 'user_feedback_count', 'user_positive_feedback']
+2026-03-25 11:11:57,201 - INFO - Sample listing: {'title': '3D wooden puzzle - Classic Printing press', 'price_val': 50.0, 'brand': 'Rolife', 'views': 28, 'favs': 7, 'engagement_rate': 25.0, 'sell_score': 15.68, 'id': 7931930473}
+2026-03-25 11:11:57,201 - INFO - Computed stats: 52 items
+2026-03-25 11:12:51,070 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/my_orders?type=sold&status=all&per_page=100&page=1 "HTTP/1.1 200 OK"
+2026-03-25 11:12:51,693 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/my_orders?type=sold&status=all&per_page=100&page=2 "HTTP/1.1 200 OK"
+2026-03-25 11:12:54,885 - INFO - Syncing inventory for domain: www.vinted.at
+2026-03-25 11:12:55,818 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/wardrobe/240055157/items?page=1&per_page=100 "HTTP/1.1 200 OK"
+2026-03-25 11:12:56,456 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/wardrobe/240055157/items?page=2&per_page=100 "HTTP/1.1 200 OK"
+2026-03-25 11:12:56,458 - INFO - Fetched 52 items
+2026-03-25 11:12:56,460 - INFO - [DIAGNOSTIC] Item keys: ['id', 'title', 'user_id', 'is_draft', 'is_closed', 'is_reserved', 'is_hidden', 'price', 'transaction_permitted', 'is_processing', 'currency', 'item_closing_action', 'path', 'user', 'item_alert', 'item_alert_type', 'promoted', 'is_business_user', 'size', 'view_count', 'can_push_up', 'push_up', 'can_edit', 'stats_visible', 'favourite_count', 'is_favourite', 'url', 'service_fee', 'total_item_price', 'status', 'photos', 'brand', 'is_heavy_bulky', 'item_box']
+2026-03-25 11:12:56,460 - INFO - [DIAGNOSTIC] Sample item status fields: is_closed=False, status=Neu
+2026-03-25 11:12:56,494 - INFO - Final stats keys: ['total_items', 'total_potential_revenue', 'avg_listing_price', 'price_distribution', 'categories', 'brands', 'top_listings', 'all_listings', 'most_liked', 'most_viewed', 'top_engagement', 'avg_days_listed', 'total_favourites', 'total_views', 'avg_engagement_rate', 'category_performance', 'user_login', 'user_feedback_count', 'user_positive_feedback']
+2026-03-25 11:12:56,494 - INFO - Sample listing: {'title': '3D wooden puzzle - Classic Printing press', 'price_val': 50.0, 'brand': 'Rolife', 'views': 28, 'favs': 7, 'engagement_rate': 25.0, 'sell_score': 15.68, 'id': 7931930473}
+2026-03-25 11:12:56,494 - INFO - Computed stats: 52 items
+2026-03-25 11:18:58,530 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/my_orders?type=sold&status=all&per_page=100&page=1 "HTTP/1.1 200 OK"
+2026-03-25 11:18:59,071 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/my_orders?type=sold&status=all&per_page=100&page=2 "HTTP/1.1 200 OK"
+2026-03-25 11:19:02,756 - INFO - Syncing inventory for domain: www.vinted.at
+2026-03-25 11:19:03,650 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/wardrobe/240055157/items?page=1&per_page=100 "HTTP/1.1 200 OK"
+2026-03-25 11:19:04,341 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/wardrobe/240055157/items?page=2&per_page=100 "HTTP/1.1 200 OK"
+2026-03-25 11:19:04,343 - INFO - Fetched 52 items
+2026-03-25 11:19:04,344 - INFO - [DIAGNOSTIC] Item keys: ['id', 'title', 'user_id', 'is_draft', 'is_closed', 'is_reserved', 'is_hidden', 'price', 'transaction_permitted', 'is_processing', 'currency', 'item_closing_action', 'path', 'user', 'item_alert', 'item_alert_type', 'promoted', 'is_business_user', 'size', 'view_count', 'can_push_up', 'push_up', 'can_edit', 'stats_visible', 'favourite_count', 'is_favourite', 'url', 'service_fee', 'total_item_price', 'status', 'photos', 'brand', 'is_heavy_bulky', 'item_box']
+2026-03-25 11:19:04,367 - INFO - Final stats keys: ['total_items', 'total_potential_revenue', 'avg_listing_price', 'price_distribution', 'categories', 'brands', 'top_listings', 'all_listings', 'most_liked', 'most_viewed', 'top_engagement', 'avg_days_listed', 'total_favourites', 'total_views', 'avg_engagement_rate', 'category_performance', 'status_distribution', 'user_login', 'user_feedback_count', 'user_positive_feedback']
+2026-03-25 11:19:04,368 - INFO - Sample listing: {'title': '3D wooden puzzle - Classic Printing press', 'price_val': 50.0, 'brand': 'Rolife', 'views': 28, 'favs': 7, 'engagement_rate': 25.0, 'sell_score': 15.68, 'id': 7931930473, 'status': 'Hidden'}
+2026-03-25 11:19:04,368 - INFO - Computed stats: 52 items
+2026-03-25 11:46:14,869 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/my_orders?type=sold&status=all&per_page=100&page=1 "HTTP/1.1 200 OK"
+2026-03-25 11:46:15,446 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/my_orders?type=sold&status=all&per_page=100&page=2 "HTTP/1.1 200 OK"
+2026-03-25 11:46:19,318 - INFO - Syncing inventory for domain: www.vinted.at
+2026-03-25 11:46:20,307 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/wardrobe/240055157/items?page=1&per_page=100 "HTTP/1.1 200 OK"
+2026-03-25 11:46:20,995 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/wardrobe/240055157/items?page=2&per_page=100 "HTTP/1.1 200 OK"
+2026-03-25 11:46:20,996 - INFO - Fetched 52 items
+2026-03-25 11:46:20,998 - INFO - [DIAGNOSTIC] Item keys: ['id', 'title', 'user_id', 'is_draft', 'is_closed', 'is_reserved', 'is_hidden', 'price', 'transaction_permitted', 'is_processing', 'currency', 'item_closing_action', 'path', 'user', 'item_alert', 'item_alert_type', 'promoted', 'is_business_user', 'size', 'view_count', 'can_push_up', 'push_up', 'can_edit', 'stats_visible', 'favourite_count', 'is_favourite', 'url', 'service_fee', 'total_item_price', 'status', 'photos', 'brand', 'is_heavy_bulky', 'item_box']
+2026-03-25 11:46:21,032 - INFO - Final stats keys: ['total_items', 'total_potential_revenue', 'avg_listing_price', 'price_distribution', 'categories', 'brands', 'top_listings', 'all_listings', 'most_liked', 'most_viewed', 'top_engagement', 'avg_days_listed', 'total_favourites', 'total_views', 'avg_engagement_rate', 'category_performance', 'status_distribution', 'user_login', 'user_feedback_count', 'user_positive_feedback']
+2026-03-25 11:46:21,032 - INFO - Sample listing: {'title': '3D wooden puzzle - Classic Printing press', 'price_val': 50.0, 'brand': 'Rolife', 'views': 28, 'favs': 7, 'engagement_rate': 25.0, 'sell_score': 15.68, 'id': 7931930473, 'status': 'Hidden'}
+2026-03-25 11:46:21,032 - INFO - Computed stats: 52 items
+2026-03-25 11:46:48,067 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/my_orders?type=sold&status=all&per_page=100&page=1 "HTTP/1.1 200 OK"
+2026-03-25 11:46:48,680 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/my_orders?type=sold&status=all&per_page=100&page=2 "HTTP/1.1 200 OK"
+2026-03-25 11:46:51,490 - INFO - Syncing inventory for domain: www.vinted.at
+2026-03-25 11:46:52,481 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/wardrobe/240055157/items?page=1&per_page=100 "HTTP/1.1 200 OK"
+2026-03-25 11:46:53,157 - INFO - HTTP Request: GET https://www.vinted.at/api/v2/wardrobe/240055157/items?page=2&per_page=100 "HTTP/1.1 200 OK"
+2026-03-25 11:46:53,158 - INFO - Fetched 52 items
+2026-03-25 11:46:53,160 - INFO - [DIAGNOSTIC] Item keys: ['id', 'title', 'user_id', 'is_draft', 'is_closed', 'is_reserved', 'is_hidden', 'price', 'transaction_permitted', 'is_processing', 'currency', 'item_closing_action', 'path', 'user', 'item_alert', 'item_alert_type', 'promoted', 'is_business_user', 'size', 'view_count', 'can_push_up', 'push_up', 'can_edit', 'stats_visible', 'favourite_count', 'is_favourite', 'url', 'service_fee', 'total_item_price', 'status', 'photos', 'brand', 'is_heavy_bulky', 'item_box']
+2026-03-25 11:46:53,191 - INFO - Final stats keys: ['total_items', 'total_potential_revenue', 'avg_listing_price', 'price_distribution', 'categories', 'brands', 'top_listings', 'all_listings', 'most_liked', 'most_viewed', 'top_engagement', 'avg_days_listed', 'total_favourites', 'total_views', 'avg_engagement_rate', 'category_performance', 'status_distribution', 'user_login', 'user_feedback_count', 'user_positive_feedback']
+2026-03-25 11:46:53,191 - INFO - Sample listing: {'title': '3D wooden puzzle - Classic Printing press', 'price_val': 50.0, 'brand': 'Rolife', 'views': 28, 'favs': 7, 'engagement_rate': 25.0, 'sell_score': 15.68, 'id': 7931930473, 'status': 'Hidden'}
+2026-03-25 11:46:53,191 - INFO - Computed stats: 52 items
