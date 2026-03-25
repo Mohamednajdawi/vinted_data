@@ -16,7 +16,7 @@ body { margin:0; padding:0; font-family:'Outfit',sans-serif; background:var(--bg
 .glass-container { max-width:1600px; margin:0 auto; padding:30px; }
 
 header { display:flex; justify-content:space-between; align-items:center; margin-bottom:35px; padding-bottom:20px; border-bottom:1px solid var(--border); }
-.logo { font-size:26px; font-weight:700; letter-spacing:2px; background:linear-gradient(135deg,#c084fc,#38bdf8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.logo { font-size:26px; font-weight:700; letter-spacing:2px; background:linear-gradient(135deg,#c084fc,#38bdf8); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
 .subtitle { color:var(--txt2); font-size:13px; margin-top:4px; }
 
 .sync-btn { display:flex; align-items:center; gap:8px; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.3); color:var(--accent); padding:12px 24px; border-radius:30px; font-family:'Outfit',sans-serif; font-weight:600; cursor:pointer; transition:all .3s; box-shadow:0 0 20px var(--glow); }
@@ -24,7 +24,7 @@ header { display:flex; justify-content:space-between; align-items:center; margin
 
 main { display:flex; flex-direction:column; gap:22px; }
 
-.stat-row { display:grid; grid-template-columns:repeat(6,1fr); gap:18px; }
+.stat-row { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:18px; }
 .two-col { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
 .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; }
 
@@ -40,7 +40,7 @@ main { display:flex; flex-direction:column; gap:22px; }
 .stat-text { display:flex; flex-direction:column; min-width:0; }
 .stat-text .label { font-size:11px; color:var(--txt2); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
 .stat-text .value { font-size:22px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.gradient-text { background:linear-gradient(135deg,#34d399,#38bdf8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.gradient-text { background:linear-gradient(135deg,#34d399,#38bdf8); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
 
 .card-header { font-size:16px; font-weight:600; margin-bottom:18px; color:#e2e8f0; display:flex; align-items:center; }
 .card-header::before { content:''; display:inline-block; width:7px; height:7px; background:var(--accent); border-radius:50%; margin-right:9px; box-shadow:0 0 8px var(--accent); }

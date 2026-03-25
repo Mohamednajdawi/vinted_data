@@ -37,18 +37,6 @@
             </div>
             <button class="btn" onclick="syncLiveData()">Synchronize Now</button>
             <button class="btn btn-cancel" onclick="closeSyncModal()">Cancel</button>
-            <div id="syncStatus"></div>
-        <!-- Row 5: Velocity Leaderboard -->
-        <div class="chart-row">
-            <section class="card table-card" style="border: 1px solid rgba(52,211,153,0.3)">
-                <div class="card-header" style="color:#34d399">⚡ Fastest 10 Items (Best Turnover)</div>
-                <div class="table-container">
-                    <table class="modern-table">
-                        <thead><tr><th>Item</th><th>Sold Date</th><th>Days to Sell</th><th>Price</th></tr></thead>
-                        <tbody id="fastest_items_body"></tbody>
-                    </table>
-                </div>
-            </section>
         </div>
     </div>
 
@@ -68,11 +56,13 @@
             <p id="inv-status" style="color:#94a3b8;font-size:13px;margin-top:12px"></p>
         </div>
         <div class="stat-row" id="inv-kpis" style="display:none">
-            <div class="card stat-card"><div class="stat-icon" style="color:#38bdf8;background:rgba(56,189,248,.1)">📦</div><div class="stat-text"><span class="label">Active Listings</span><span class="value" id="inv-total">0</span></div></div>
-            <div class="card stat-card"><div class="stat-icon" style="color:#34d399;background:rgba(52,211,153,.1)">💰</div><div class="stat-text"><span class="label">Potential Revenue</span><span class="value gradient-text" id="inv-potential">€0</span></div></div>
-            <div class="card stat-card"><div class="stat-icon" style="color:#fb923c;background:rgba(251,146,60,.1)">⏱️</div><div class="stat-text"><span class="label">Avg Days Listed</span><span class="value" id="inv-days">—</span></div></div>
-            <div class="card stat-card velocity"><div class="stat-icon" style="color:#fb923c;background:rgba(251,146,60,.1)">⚡</div><div class="stat-text"><span class="label">Sales Velocity</span><span class="value" id="inv-velocity">—</span></div></div>
-            <div class="card stat-card er"><div class="stat-icon" style="color:#f472b6;background:rgba(244,114,182,.1)">📈</div><div class="stat-text"><span class="label">Engagement Rate</span><span class="value" id="inv-er">0%</span></div></div>
+            <div class="card stat-card"><div class="stat-icon" style="color:#38bdf8;background:rgba(56,189,248,.1)">📦</div><div class="stat-text"><span class="label">Total Listings</span><span class="value" id="inv-total">0</span></div></div>
+            <div class="card stat-card"><div class="stat-icon" style="color:#34d399;background:rgba(52,211,153,.1)">💰</div><div class="stat-text"><span class="label">Potential Rev</span><span class="value gradient-text" id="inv-potential">€0</span></div></div>
+            <div class="card stat-card"><div class="stat-icon" style="color:#c084fc;background:rgba(192,132,252,.1)">🏷️</div><div class="stat-text"><span class="label">Avg Price</span><span class="value" id="inv-avg">€0</span></div></div>
+            <div class="card stat-card"><div class="stat-icon" style="color:#f472b6;background:rgba(244,114,182,.1)">❤️</div><div class="stat-text"><span class="label">Total Likes</span><span class="value" id="inv-favs">0</span></div></div>
+            <div class="card stat-card"><div class="stat-icon" style="color:#facc15;background:rgba(250,204,21,.1)">⏱️</div><div class="stat-text"><span class="label">Avg Days</span><span class="value" id="inv-days">—</span></div></div>
+            <div class="card stat-card velocity"><div class="stat-icon" style="color:#fb923c;background:rgba(251,146,60,.1)">⚡</div><div class="stat-text"><span class="label">Velocity</span><span class="value" id="inv-velocity">0.00</span></div></div>
+            <div class="card stat-card er"><div class="stat-icon" style="color:#818cf8;background:rgba(129,140,248,.1)">📈</div><div class="stat-text"><span class="label">Engage Rate</span><span class="value" id="inv-er">0%</span></div></div>
         </div>
         <div class="chart-row two-col" id="inv-charts" style="display:none;margin-top:22px">
             <section class="card chart-card">
@@ -262,6 +252,19 @@
                     <table class="modern-table">
                         <thead><tr><th>Item</th><th>Sold</th><th>Value</th></tr></thead>
                         <tbody id="top_items_body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Row 5: Velocity Leaderboard -->
+        <div class="chart-row">
+            <section class="card table-card" style="border: 1px solid rgba(52,211,153,0.3)">
+                <div class="card-header" style="color:#34d399">⚡ Fastest 10 Items (Best Turnover)</div>
+                <div class="table-container">
+                    <table class="modern-table">
+                        <thead><tr><th>Item</th><th>Sold Date</th><th>Days to Sell</th><th>Price</th></tr></thead>
+                        <tbody id="fastest_items_body"></tbody>
                     </table>
                 </div>
             </section>
