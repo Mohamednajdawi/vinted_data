@@ -100,6 +100,28 @@ function renderDashboard(data) {
         data: { labels: hourLabels, datasets: [{ data: hourVals, backgroundColor: gradH, borderRadius: 4, borderSkipped: false }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false, beginAtZero: true }, x: { grid: { display: false }, ticks: { maxRotation: 60, font: { size: 10 } } } } }
     });
+    
+    // -- Timing Summary Text --
+    const timingInsight = document.getElementById('timing-insight');
+    if (timingInsight) {
+        const insights = [];
+        const dow = data.day_of_week_sales || {};
+        const weekendCount = (dow['Saturday']||0) + (dow['Sunday']||0);
+        const totalRev = Object.values(dow).reduce((a,b)=>a+b, 0);
+        if (weekendCount > totalRev * 0.4) {
+            insights.push("🌟 <strong>Weekend Power:</strong> Your revenue peaks on weekends. Try to refresh or list new items on Friday evenings!");
+        } else {
+            insights.push("💼 <strong>Mid-Week Consistency:</strong> Your sales are spread evenly. Consistency is your strength!");
+        }
+        
+        const hours = data.hour_of_day || {};
+        const nightCount = Object.keys(hours).filter(h => h >= 19 || h <= 1).reduce((a,h)=>a+hours[h], 0);
+        const totCount = Object.values(hours).reduce((a,b)=>a+b,0);
+        if (nightCount > totCount * 0.4) {
+            insights.push("🌙 <strong>Night Owl Activity:</strong> Buyers are most active late. Listing between 7 PM and 9 PM will catch the peak wave.");
+        }
+        timingInsight.innerHTML = insights.join(' | ');
+    }
 
     // -- 5. Price Distribution Doughnut --
     const priceLabels = Object.keys(data.price_distribution || {});
@@ -113,6 +135,27 @@ function renderDashboard(data) {
 
     lastDashboardData = data;
     
+    // -- Best Timing Advice --
+    try {
+        const daysOrder = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+        let maxDay = 'Sunday', maxDayVal = -1;
+        daysOrder.forEach(d => {
+            const val = (data.day_of_week_sales || {})[d] || 0;
+            if (val > maxDayVal) { maxDayVal = val; maxDay = d; }
+        });
+        
+        let maxHour = 18, maxHourVal = -1;
+        Object.keys(data.hour_of_day || {}).forEach(h => {
+            const val = data.hour_of_day[h] || 0;
+            if (val > maxHourVal) { maxHourVal = val; maxHour = h; }
+        });
+        
+        const bestTimingEl = document.getElementById('best_timing');
+        if (bestTimingEl) {
+            bestTimingEl.innerHTML = `<span style="color:#38bdf8">${maxDay.slice(0,3)}</span> @ <span style="color:#f472b6">${maxHour}:00</span>`;
+        }
+    } catch(e) { console.warn('Best Timing calc failed:', e); }
+
     // Populate Status Filter
     const filter = document.getElementById('statusFilter');
     if (filter) {
