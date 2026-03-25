@@ -165,11 +165,23 @@ def compute_inventory_stats(items: list, user: dict) -> dict:
 
     df = pd.DataFrame(items)
     if not df.empty:
-        print(f"[DIAGNOSTIC] First item detail: {items[0]}")
+        first_id = items[0].get('id')
+        logger.info(f"[DIAGNOSTIC] Fetching full details for item {first_id}...")
+        try:
+            url = f"{client.base_url}/items/{first_id}"
+            async with httpx.AsyncClient(headers=client.headers) as http:
+                resp = await http.get(url)
+                if resp.status_code == 200:
+                    logger.info(f"[DIAGNOSTIC] Full item detail: {resp.json().get('item', {})}")
+                else:
+                    logger.info(f"[DIAGNOSTIC] Full item fetch failed: {resp.status_code}")
+        except Exception as e:
+            logger.info(f"[DIAGNOSTIC] Full item fetch error: {e}")
+            
+        logger.info(f"[DIAGNOSTIC] First item detail: {items[0]}")
         sample = df.iloc[0].to_dict()
-        print(f"[DIAGNOSTIC] Path: {sample.get('path')}")
-        print(f"[DIAGNOSTIC] Stock Status Check: is_closed={sample.get('is_closed')}, is_hidden={sample.get('is_hidden')}, is_reserved={sample.get('is_reserved')}")
-        logger.info(f"[DIAGNOSTIC] Item keys: {list(df.columns)}")
+        logger.info(f"[DIAGNOSTIC] Path: {sample.get('path')}")
+        logger.info(f"[DIAGNOSTIC] Stock Status Check: is_closed={sample.get('is_closed')}, is_hidden={sample.get('is_hidden')}, is_reserved={sample.get('is_reserved')}")
 
     def parse_price(p):
         if isinstance(p, dict): return float(p.get('amount', 0))

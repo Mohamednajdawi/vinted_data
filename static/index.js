@@ -409,11 +409,6 @@ const renderCatTable = () => {
     
     catBody.innerHTML = '';
     lastInventoryData.category_performance.forEach(c => {
-        const getChip = er => {
-            if (er > 10) return '<span class="insight-chip chip-high">🔥 Viral</span>';
-            if (er > 4) return '<span class="insight-chip chip-mid">💎 Good</span>';
-            return '<span class="insight-chip chip-low">🧊 Static</span>';
-        };
         catBody.insertAdjacentHTML('beforeend', `
             <tr>
                 <td style="font-weight:600;color:#e2e8f0">${c.catalog_title || c.category_title || 'Other'}</td>
@@ -421,7 +416,7 @@ const renderCatTable = () => {
                 <td>€${(+c.price_val || 0).toFixed(2)}</td>
                 <td style="color:#38bdf8">👁 ${c.view_count}</td>
                 <td style="color:#f472b6">❤ ${c.favourite_count}</td>
-                <td style="font-weight:600">${c.er}% ${getChip(c.er)}</td>
+                <td style="font-weight:600">${c.er}%</td>
             </tr>
         `);
     });
