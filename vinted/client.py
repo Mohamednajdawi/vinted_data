@@ -212,17 +212,30 @@ class VintedClient:
         if isinstance(photo, dict):
             photo_url = photo.get('url')
 
-        # Velocity: Try to find listing date in the raw order
-        # Field names might vary: 'listing_date', 'item_created_at', etc.
+        # Velocity Heuristic: Extract timestamp from photo URL if listing_date is missing
         listing_date = None
+        
+        # 1. Try explicit fields first
         for k in ['listing_date', 'item_created_at_ts', 'created_at_ts']:
             if k in raw:
                 try:
-                    ts = float(raw[k])
-                    listing_date = datetime.fromtimestamp(ts)
+                    listing_date = datetime.fromtimestamp(float(raw[k]))
                     break
                 except: pass
         
+        # 2. Heuristic: Photo URLs like .../1774347753.jpeg contain the listing/upload TS
+        if not listing_date and photo_url:
+            import re
+            # Match digits before .jpg or .jpeg
+            match = re.search(r'/(\d{9,11})\.jpe?g', photo_url)
+            if match:
+                try:
+                    ts = float(match.group(1))
+                    if 1500000000 < ts < 2000000000: # Sanity check for Unix TS (2017-2033)
+                        listing_date = datetime.fromtimestamp(ts)
+                        print(f"[VintedClient] HEURISTIC: Extracted listing_date {listing_date} from photo URL")
+                except: pass
+
         return VintedOrder(
             order_id=str(raw.get('conversation_id', 'unknown')),
             title=raw.get('title', 'Unknown Item'),
@@ -233,5 +246,5 @@ class VintedClient:
             date=created_at,
             listing_date=listing_date,
             transaction_id=transaction_id,
-            brand=None  # Not available in this endpoint
+            brand=None
         )

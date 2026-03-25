@@ -173,24 +173,9 @@ async def compute_inventory_stats(items: list, user: dict, client: VintedClient)
         print(f"[ERROR] DataFrame creation failed: {e}")
         return {"total_items": len(items), "error": "DataFrame error"}
     if not df.empty:
-        first_id = items[0].get('id')
-        print(f"[DIAGNOSTIC] Fetching full details for item {first_id}...")
-        try:
-            url = f"{client.base_url}/items/{first_id}"
-            async with httpx.AsyncClient(headers=client.headers) as http:
-                resp = await http.get(url)
-                if resp.status_code == 200:
-                    detail = resp.json().get('item', {})
-                    print(f"[DIAGNOSTIC] Full item detail: {detail}")
-                    print(f"[DIAGNOSTIC] Catalog: {detail.get('catalog_id')} | {detail.get('catalog_branch_title')}")
-                else:
-                    print(f"[DIAGNOSTIC] Full item fetch failed: {resp.status_code}")
-        except Exception as e:
-            print(f"[DIAGNOSTIC] Full item fetch error: {e}")
-            
-        print(f"[DIAGNOSTIC] RAW FIRST ITEM: {items[0]}")
-        sample = df.iloc[0].to_dict()
-        print(f"[DIAGNOSTIC] Path: {sample.get('path')}")
+        # --- Diagnostic: Snapshot of the first item ---
+        print(f"[DIAGNOSTIC] RAW FIRST ITEM ID: {items[0].get('id')}")
+        print(f"[DIAGNOSTIC] Path: {items[0].get('path')}")
 
     def parse_price(p):
         if isinstance(p, dict): return float(p.get('amount', 0))
