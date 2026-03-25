@@ -227,14 +227,25 @@ async def compute_inventory_stats(items: list, user: dict, client: VintedClient)
             cat_col = c
             break
             
-    if not cat_col and 'path' in df.columns:
-        def extract_cat(p):
-            if not p: return 'Other'
-            parts = str(p).strip('/').split('/')
-            if len(parts) >= 3: return parts[2].title()
-            if len(parts) >= 2: return parts[1].title()
-            return parts[0].title()
-        df['catalog_title'] = df['path'].apply(extract_cat)
+    if not cat_col:
+        def extract_cat_v2(row):
+            # 1. Try real catalog branch title first (if we fetched full details)
+            if 'catalog_branch_title' in row and row['catalog_branch_title']:
+                return row['catalog_branch_title']
+            
+            # 2. Try to get it from the path/slug, but CLEAN IT
+            p = row.get('path', '')
+            if p and '/items/' in p:
+                parts = str(p).strip('/').split('/')
+                slug = parts[2] if len(parts) >= 3 else (parts[1] if len(parts) >= 2 else parts[0])
+                import re
+                clean = re.sub(r'^\d+-', '', slug)
+                return clean.replace('-', ' ').title()
+                
+            # 3. Fallback to title
+            return str(row.get('title', 'Other')).split('-')[0].strip().title()
+            
+        df['catalog_title'] = df.apply(extract_cat_v2, axis=1)
         cat_col = 'catalog_title'
     categories = df[cat_col].value_counts().head(8).to_dict() if cat_col else {}
 
