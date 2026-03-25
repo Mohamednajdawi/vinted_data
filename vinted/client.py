@@ -135,11 +135,14 @@ class VintedClient:
         # Try JWT first, then fallback to profile endpoint
         user_id = self._extract_user_id_from_cookie()
         user: Dict[str, Any] = {}
-
+        
+        print(f"[VintedClient] Trace: user_id after extraction: '{user_id}'")
         if not user_id:
+            print("[VintedClient] Trace: user_id missing, fetching info...")
             user_data = await self.fetch_user_info()
             user = user_data.get('user', user_data)
             user_id = str(user.get('id', '')) if user.get('id') else None
+            print(f"[VintedClient] Trace: user_id after info fetch: '{user_id}'")
 
         print(f"[VintedClient] Final user_id for wardrobe: {user_id}")
         if not user_id:
