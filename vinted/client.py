@@ -55,9 +55,14 @@ class VintedClient:
                 if page == 1:
                     print(f"[VintedClient] Response keys: {list(data.keys())}")
                     print(f"[VintedClient] Response preview: {str(data)[:500]}")
-                orders = data.get("orders", [])
+                orders = data.get("orders", []) or data.get("my_orders", [])
+                if orders and page == 1:
+                    print(f"[VintedClient] First raw order keys: {list(orders[0].keys())}")
+                    print(f"[VintedClient] First raw order sample: {str(orders[0])[:500]}")
+                
                 if not orders:
                     # Try alternate keys used by some Vinted locales
+                    orders = data.get("my_orders", [])
                     orders = data.get("my_orders", data.get("items", data.get("data", [])))
                 if not orders:
                     break
@@ -146,31 +151,31 @@ class VintedClient:
 
         print(f"[VintedClient] Final user_id for wardrobe: {user_id}")
         if not user_id:
-            raise Exception(
-                "Could not resolve your Vinted user ID. "
-                "Make sure you copied the full cookie containing 'access_token_web=eyJ...' from www.vinted.at."
-            )
+            raise Exception("Could not resolve your Vinted user ID. Session may have expired.")
 
         all_items: List[Dict[str, Any]] = []
-        for page in range(1, max_pages + 1):
-            # Correct endpoint from extension: /api/v2/wardrobe/{user_id}/items
-            url = f"{self.base_url}/wardrobe/{user_id}/items?page={page}&per_page=100"
-            print(f"[VintedClient] Fetching wardrobe page {page}: {url}")
-            async with httpx.AsyncClient(headers=self.headers, follow_redirects=False) as client:
-                response = await client.get(url)
-                if response.status_code in (301, 302, 303, 307, 308):
-                    raise Exception(f"Vinted redirected the items request (HTTP {response.status_code}). Please re-sync your cookie.")
-                if response.status_code != 200:
-                    print(f"[VintedClient] wardrobe page {page} failed: HTTP {response.status_code}")
-                    break
-                try:
+        try:
+            for page in range(1, max_pages + 1):
+                url = f"{self.base_url}/wardrobe/{user_id}/items?page={page}&per_page=100"
+                print(f"[VintedClient] Fetching wardrobe page {page}: {url}")
+                async with httpx.AsyncClient(headers=self.headers, follow_redirects=False) as client:
+                    response = await client.get(url)
+                    print(f"[VintedClient] Wardrobe page {page} status: {response.status_code}")
+                    if response.status_code != 200:
+                        print(f"[VintedClient] Wardrobe error body: {response.text[:200]}")
+                        break
                     data = response.json()
-                except Exception:
-                    break
-                items = data.get('items', [])
-                if not items:
-                    break
-                all_items.extend(items)
+                    current_items = data.get('items', [])
+                    print(f"[VintedClient] Page {page} fetched {len(current_items)} items")
+                    if not current_items:
+                        break
+                    all_items.extend(current_items)
+        except Exception as e:
+            print(f"[VintedClient] Critical error in fetch_all_items loop: {e}")
+            import traceback
+            print(traceback.format_exc())
+            
+        print(f"[VintedClient] Total wardrobe items fetched: {len(all_items)}")
         return all_items, user
 
     @staticmethod
@@ -207,14 +212,26 @@ class VintedClient:
         if isinstance(photo, dict):
             photo_url = photo.get('url')
 
+        # Velocity: Try to find listing date in the raw order
+        # Field names might vary: 'listing_date', 'item_created_at', etc.
+        listing_date = None
+        for k in ['listing_date', 'item_created_at_ts', 'created_at_ts']:
+            if k in raw:
+                try:
+                    ts = float(raw[k])
+                    listing_date = datetime.fromtimestamp(ts)
+                    break
+                except: pass
+        
         return VintedOrder(
             order_id=str(raw.get('conversation_id', 'unknown')),
             title=raw.get('title', 'Unknown Item'),
             price=price_val,
             currency=currency,
-            buyer_name='Vinted Buyer',  # Not available in this endpoint
+            buyer_name='Vinted Buyer',
             status=raw.get('status', raw.get('transaction_user_status', 'unknown')),
             date=created_at,
+            listing_date=listing_date,
             transaction_id=transaction_id,
             brand=None  # Not available in this endpoint
         )

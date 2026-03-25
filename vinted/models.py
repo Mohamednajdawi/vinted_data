@@ -15,3 +15,10 @@ class VintedOrder:
     conversation_id: Optional[str] = None
     transaction_id: Optional[str] = None
     brand: Optional[str] = None
+    listing_date: Optional[datetime] = None
+
+    @property
+    def days_to_sell(self) -> Optional[int]:
+        if self.listing_date and self.date:
+            return (self.date - self.listing_date).days
+        return None

@@ -43,6 +43,16 @@ function renderDashboard(data) {
     document.getElementById('aov').textContent = fmt(data.aov);
     document.getElementById('best_month').textContent = data.best_month || '—';
     document.getElementById('worst_month').textContent = data.worst_month || '—';
+    
+    // Average Velocity
+    if (data.latest_sales) {
+        const soldWithVelocity = data.latest_sales.filter(s => s.days_to_sell != null);
+        if (soldWithVelocity.length > 0) {
+            const avg = soldWithVelocity.reduce((acc, s) => acc + s.days_to_sell, 0) / soldWithVelocity.length;
+            document.getElementById('avg_velocity').textContent = `${avg.toFixed(1)} Days`;
+        }
+    }
+    
     document.getElementById('syncTag').innerHTML = `<span style="color:#34d399">●</span> Updated: ${new Date().toLocaleTimeString()}`;
 
     Chart.defaults.color = '#94a3b8';
@@ -198,10 +208,12 @@ const renderRecentSales = (salesList) => {
     tbody.innerHTML = '';
     salesList.forEach(sale => {
         const isOk = /beendet|erfolgreich|completed|terminé|livré/i.test(sale.status);
+        const velocity = sale.days_to_sell != null ? `${sale.days_to_sell}d` : '<span style="color:#475569">—</span>';
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
             <td class="item-name">${String(sale.title).substring(0,28)}${sale.title.length>28?'…':''}</td>
             <td style="color:#94a3b8">${sale.date_str}</td>
+            <td style="color:#38bdf8;font-weight:600">${velocity}</td>
             <td><span class="status-badge ${isOk?'status-success':'status-pending'}">${isOk?'Completed':'Processing'}</span></td>
             <td style="font-weight:600">€${(+sale.price).toFixed(2)}</td>
           </tr>`);

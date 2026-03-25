@@ -71,13 +71,22 @@ class SalesProcessor:
         # --- Top 10 most valuable items sold ---
         top_items_df = df.nlargest(10, 'price')[['title', 'price', 'date', 'status']].copy()
         top_items_df['date_str'] = top_items_df['date'].dt.strftime('%b %d, %Y')
-        top_items = top_items_df[['title', 'price', 'date_str', 'status']].to_dict('records')
+        top_items = []
+        for _, row in top_items_df.iterrows():
+            item_dict = row.to_dict()
+            item_dict['days_to_sell'] = next((o.days_to_sell for o in orders if o.title == row['title']), None)
+            top_items.append(item_dict)
 
         # --- Recent transactions (10 most recent) ---
         latest = df.sort_values('date', ascending=False).head(10).fillna('')
         latest = latest.copy()
         latest['date_str'] = latest['date'].dt.strftime('%b %d, %H:%M')
-        latest_sales = latest[['title', 'price', 'date_str', 'status']].to_dict('records')
+        latest_sales = []
+        for _, row in latest.iterrows():
+            sale_dict = row[['title', 'price', 'date_str', 'status']].to_dict()
+            # Match back to the original object to get the property
+            sale_dict['days_to_sell'] = next((o.days_to_sell for o in orders if o.title == row['title']), None)
+            latest_sales.append(sale_dict)
 
         # --- Status distribution ---
         status_dist = df['status'].value_counts().to_dict()

@@ -181,6 +181,13 @@
                     <span class="value" id="best_timing" style="font-size:18px">Calculating...</span>
                 </div>
             </div>
+            <div class="card stat-card pulse-hover" style="border-left: 4px solid #34d399">
+                <div class="stat-icon" style="color:#34d399;background:rgba(52,211,153,.1)">⚡</div>
+                <div class="stat-text">
+                    <span class="label">Avg. Days to Sell</span>
+                    <span class="value" id="avg_velocity" style="font-size:22px">—</span>
+                </div>
+            </div>
         </div>
 
         <!-- Row 2: Main trend + cumulative -->
@@ -233,7 +240,7 @@
                 </div>
                 <div class="table-container">
                     <table class="modern-table">
-                        <thead><tr><th>Item</th><th>Date</th><th>Status</th><th>Value</th></tr></thead>
+                        <thead><tr><th>Item</th><th>Date</th><th title="Time from listing to sale">Velocity</th><th>Status</th><th>Value</th></tr></thead>
                         <tbody id="recent_sales_body"></tbody>
                     </table>
                 </div>
