@@ -159,6 +159,7 @@ async def live_inventory_sync(req: LiveSyncRequest):
 
 async def compute_inventory_stats(items: list, user: dict, client: VintedClient) -> dict:
     import pandas as pd
+    import httpx
     from datetime import datetime
     if not items:
         return {"total_items": 0}
