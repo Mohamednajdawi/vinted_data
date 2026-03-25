@@ -148,7 +148,7 @@ async def live_inventory_sync(req: LiveSyncRequest):
         logger.info(f"Syncing inventory for domain: {client.domain}")
         items, user = await client.fetch_all_items(max_pages=20)
         logger.info(f"Fetched {len(items)} items")
-        stats = compute_inventory_stats(items, user)
+        stats = await compute_inventory_stats(items, user, client)
         logger.info(f"Computed stats: {stats.get('total_items')} items")
         return {"success": True, "stats": stats}
     except Exception as e:
@@ -157,7 +157,7 @@ async def live_inventory_sync(req: LiveSyncRequest):
         logger.error(f"[InventorySync ERROR] {err_msg}")
         return {"success": False, "error": str(e)}
 
-def compute_inventory_stats(items: list, user: dict) -> dict:
+async def compute_inventory_stats(items: list, user: dict, client: VintedClient) -> dict:
     import pandas as pd
     from datetime import datetime
     if not items:
