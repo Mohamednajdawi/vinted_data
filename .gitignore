@@ -8,3 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Logs and debug
+vinted_debug.log
+vinted_debug_v2.log
+*.log
