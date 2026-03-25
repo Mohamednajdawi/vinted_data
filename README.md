@@ -2,7 +2,7 @@
 
 A premium, data-driven dashboard designed for Vinted power sellers to optimize their shop performance, track revenue trends, and manage inventory health with professional-grade insights.
 
-![Dashboard Preview](file:///C:/Users/INT100313/.gemini/antigravity/brain/74aadb77-00d1-4853-ab80-0560267da9e3/sales_analytics_dashboard_1774361925399.png)
+![Dashboard Preview](assets/img/sales_dashboard.png)
 
 ## ✨ Key Features
 
@@ -18,7 +18,7 @@ A premium, data-driven dashboard designed for Vinted power sellers to optimize t
 - **Category Deep-Dive**: Sortable market performance metrics (Average Price, Views, Likes) for every niche in your shop.
 - **Live Sync**: Direct integration with Vinted wardrobe API for real-time inventory tracking.
 
-![Inventory Health](file:///C:/Users/INT100313/.gemini/antigravity/brain/74aadb77-00d1-4853-ab80-0560267da9e3/inventory_dashboard_1774361933516.png)
+![Inventory Health](assets/img/inventory_dashboard.png)
 
 ## 🚀 Quick Start
 
