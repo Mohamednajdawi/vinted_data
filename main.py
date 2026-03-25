@@ -158,14 +158,20 @@ async def live_inventory_sync(req: LiveSyncRequest):
     except Exception as e:
         import traceback
         err_msg = traceback.format_exc()
-        logger.error(f"[InventorySync ERROR] {err_msg}")
+        print(f"[InventorySync ERROR] Console Dump:\n{err_msg}")
         return {"success": False, "error": str(e)}
 
 async def compute_inventory_stats(items: list, user: dict, client: VintedClient) -> dict:
+    print(f"[DEBUG] Started compute_inventory_stats with {len(items)} items")
     if not items:
         return {"total_items": 0}
 
-    df = pd.DataFrame(items)
+    try:
+        df = pd.DataFrame(items)
+        print(f"[DEBUG] DataFrame created with shape: {df.shape}")
+    except Exception as e:
+        print(f"[ERROR] DataFrame creation failed: {e}")
+        return {"total_items": len(items), "error": "DataFrame error"}
     if not df.empty:
         first_id = items[0].get('id')
         print(f"[DIAGNOSTIC] Fetching full details for item {first_id}...")
@@ -245,8 +251,20 @@ async def compute_inventory_stats(items: list, user: dict, client: VintedClient)
             # 3. Fallback to title
             return str(row.get('title', 'Other')).split('-')[0].strip().title()
             
-        df['catalog_title'] = df.apply(extract_cat_v2, axis=1)
-        cat_col = 'catalog_title'
+        print(f"[DEBUG] Applying extract_cat_v2 to {len(df)} rows...")
+        try:
+            df['catalog_title'] = df.apply(extract_cat_v2, axis=1)
+            cat_col = 'catalog_title'
+            print("[DEBUG] Category extraction successful")
+        except Exception as e:
+            print(f"[ERROR] Category extraction failed: {e}")
+            import traceback
+            print(traceback.format_exc())
+            # Fallback
+            df['catalog_title'] = 'Uncategorized'
+            cat_col = 'catalog_title'
+    
+    print(f"[DEBUG] Building categories dict from {cat_col}...")
     categories = df[cat_col].value_counts().head(8).to_dict() if cat_col else {}
 
     # --- Brand breakdown (from brand_dto dict) ---
@@ -365,14 +383,14 @@ async def compute_inventory_stats(items: list, user: dict, client: VintedClient)
     ]
 
     res = {
-        "total_items": len(items),
+        "total_items": int(len(df)),
         "total_potential_revenue": total_potential,
         "avg_listing_price": avg_price,
         "price_distribution": price_dist,
         "categories": {str(k): int(v) for k, v in categories.items()},
         "brands": {str(k): int(v) for k, v in brands.items()} if isinstance(brands, dict) else {},
         "top_listings": top_listings,
-        "all_listings": df.to_dict('records')[:100],  # More for deep dive
+        "all_listings": df.to_dict('records')[:100],
         "most_liked": most_liked,
         "most_viewed": most_viewed,
         "top_engagement": top_engagement,
@@ -386,6 +404,7 @@ async def compute_inventory_stats(items: list, user: dict, client: VintedClient)
         "user_feedback_count": user.get('feedback_count'),
         "user_positive_feedback": user.get('positive_feedback_count'),
     }
+    print(f"[DEBUG] Final results summary: {res['total_items']} items, {len(res['category_performance'])} cats")
     
     # Extra debug log and JSON cleanup
     # Ensure no NaN values reach the JSON serializer
