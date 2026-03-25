@@ -8,6 +8,10 @@ from vinted.processor import SalesProcessor
 from vinted.client import VintedClient
 from vinted.vindy_api import router as vindy_router
 from dotenv import load_dotenv
+import httpx
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -158,9 +162,6 @@ async def live_inventory_sync(req: LiveSyncRequest):
         return {"success": False, "error": str(e)}
 
 async def compute_inventory_stats(items: list, user: dict, client: VintedClient) -> dict:
-    import pandas as pd
-    import httpx
-    from datetime import datetime
     if not items:
         return {"total_items": 0}
 
@@ -174,8 +175,8 @@ async def compute_inventory_stats(items: list, user: dict, client: VintedClient)
                 resp = await http.get(url)
                 if resp.status_code == 200:
                     detail = resp.json().get('item', {})
-                    print(f"[DIAGNOSTIC] Full item detail keys: {list(detail.keys())}")
-                    print(f"[DIAGNOSTIC] Catalog info: {detail.get('catalog_id')} | {detail.get('catalog_branch_title')}")
+                    print(f"[DIAGNOSTIC] Full item detail: {detail}")
+                    print(f"[DIAGNOSTIC] Catalog: {detail.get('catalog_id')} | {detail.get('catalog_branch_title')}")
                 else:
                     print(f"[DIAGNOSTIC] Full item fetch failed: {resp.status_code}")
         except Exception as e:
