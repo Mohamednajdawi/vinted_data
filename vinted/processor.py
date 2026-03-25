@@ -105,7 +105,8 @@ class SalesProcessor:
                     'price': row['price'],
                     'date_str': row['date_str'],
                     'status': row['status'],
-                    'days_to_sell': row['days_to_sell']
+                    'days_to_sell': row['days_to_sell'],
+                    'transaction_id': row.get('transaction_id')
                 })
 
         return {

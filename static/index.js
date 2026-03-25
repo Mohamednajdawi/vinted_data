@@ -205,11 +205,16 @@ const renderFastestItems = (items) => {
         return;
     }
     items.forEach(item => {
+        const velocity = formatVelocity(item.days_to_sell);
+        const isOk = /beendet|erfolgreich|completed|terminé|livré/i.test(item.status);
+        const shortId = item.transaction_id ? String(item.transaction_id).slice(-6) : '—';
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
-            <td class="item-name">${String(item.title).substring(0,40)}${item.title.length>40?'…':''}</td>
+            <td style="color:#64748b;font-family:monospace;font-size:11px">#${shortId}</td>
+            <td class="item-name">${String(item.title).substring(0,30)}${item.title.length>30?'…':''}</td>
             <td style="color:#94a3b8">${item.date_str}</td>
-            <td style="color:#34d399;font-weight:600">${item.days_to_sell} days</td>
+            <td style="color:#34d399;font-weight:600">${velocity}</td>
+            <td><span class="status-badge ${isOk?'status-success':'status-pending'}">${isOk?'Completed':'Processing'}</span></td>
             <td style="font-weight:600">€${(+item.price).toFixed(2)}</td>
           </tr>`);
     });
@@ -223,13 +228,29 @@ window.filterTransactions = (status) => {
     renderRecentSales(filtered);
 };
 
+const formatVelocity = (days) => {
+    if (days == null) return '<span style="color:#475569">—</span>';
+    const totalSec = days * 86400;
+    if (totalSec < 3600) {
+        const m = Math.floor(totalSec / 60);
+        const s = Math.floor(totalSec % 60);
+        return `${m}m ${s}s`;
+    }
+    if (totalSec < 86400) {
+        const h = Math.floor(totalSec / 3600);
+        const m = Math.floor((totalSec % 3600) / 60);
+        return `${h}h ${m}m`;
+    }
+    return `${days.toFixed(1)}d`;
+};
+
 const renderRecentSales = (salesList) => {
     const tbody = document.getElementById('recent_sales_body');
     if (!tbody) return;
     tbody.innerHTML = '';
     salesList.forEach(sale => {
         const isOk = /beendet|erfolgreich|completed|terminé|livré/i.test(sale.status);
-        const velocity = sale.days_to_sell != null ? `${sale.days_to_sell}d` : '<span style="color:#475569">—</span>';
+        const velocity = formatVelocity(sale.days_to_sell);
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
             <td class="item-name">${String(sale.title).substring(0,28)}${sale.title.length>28?'…':''}</td>
